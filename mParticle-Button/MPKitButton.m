@@ -59,7 +59,7 @@ NSString * const MPKitButtonIntegrationAttribution = @"com.usebutton.source_toke
 - (void)setReferrerToken:(NSString *)buttonReferrerToken {
     if (buttonReferrerToken) {
         NSDictionary<NSString *, NSString *> *integrationAttributes = @{MPKitButtonIntegrationAttribution:buttonReferrerToken};
-        [[MParticle sharedInstance] setIntegrationAttributes:integrationAttributes forKit:[[self class] kitCode]];
+        [[MParticle sharedInstance] setIntegrationAttributes:integrationAttributes forKit:[[MPKitButton class] kitCode]];
         [self.userDefaults setObject:buttonReferrerToken forKey:BTNReferrerTokenDefaultsKey];
     }
     else {
