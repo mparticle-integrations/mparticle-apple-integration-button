@@ -15,13 +15,13 @@ extern NSString * _Nonnull const MPKitButtonErrorMessageKey;
 extern NSString * _Nonnull const MPKitButtonAttributionResultKey;
 
 /// A key into the linkInfo passed to the onAttributionComplete handler.
-extern NSString * _Nonnull const BTNDeferredDeepLinkURLKey;
+extern NSString * _Nonnull const BTNPostInstallURLKey;
 
 #pragma mark - MPIButton
 @interface MPIButton : NSObject
 
 /// Returns the Button referrer token if present (i.e. btn_ref).
-@property (nonatomic, copy, readonly, nullable) NSString *referrerToken;
+@property (nonatomic, copy, readonly, nullable) NSString *attributionToken;
 
 @end
 
