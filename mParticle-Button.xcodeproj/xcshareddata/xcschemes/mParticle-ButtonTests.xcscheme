@@ -9,26 +9,12 @@
          <BuildActionEntry
             buildForTesting = "YES"
             buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "DB0773D51DB916610031F3E3"
-               BuildableName = "mParticle_Button.framework"
-               BlueprintName = "mParticle-Button"
-               ReferencedContainer = "container:mParticle-Button.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "NO"
             buildForProfiling = "NO"
             buildForArchiving = "NO"
             buildForAnalyzing = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "DE0F93972148654000E0FF7F"
+               BlueprintIdentifier = "DE81191F214C4CF900AAC951"
                BuildableName = "mParticle-ButtonTests.xctest"
                BlueprintName = "mParticle-ButtonTests"
                ReferencedContainer = "container:mParticle-Button.xcodeproj">
@@ -38,17 +24,27 @@
    </BuildAction>
    <TestAction
       buildConfiguration = "Debug"
-      selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
-      selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
+      selectedDebuggerIdentifier = ""
+      selectedLauncherIdentifier = "Xcode.IDEFoundation.Launcher.PosixSpawn"
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "DE81191F214C4CF900AAC951"
+               BuildableName = "mParticle-ButtonTests.xctest"
+               BlueprintName = "mParticle-ButtonTests"
+               ReferencedContainer = "container:mParticle-Button.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "DB0773D51DB916610031F3E3"
-            BuildableName = "mParticle_Button.framework"
-            BlueprintName = "mParticle-Button"
+            BlueprintIdentifier = "DE81191F214C4CF900AAC951"
+            BuildableName = "mParticle-ButtonTests.xctest"
+            BlueprintName = "mParticle-ButtonTests"
             ReferencedContainer = "container:mParticle-Button.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -68,9 +64,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "DB0773D51DB916610031F3E3"
-            BuildableName = "mParticle_Button.framework"
-            BlueprintName = "mParticle-Button"
+            BlueprintIdentifier = "DE81191F214C4CF900AAC951"
+            BuildableName = "mParticle-ButtonTests.xctest"
+            BlueprintName = "mParticle-ButtonTests"
             ReferencedContainer = "container:mParticle-Button.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -86,9 +82,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "DB0773D51DB916610031F3E3"
-            BuildableName = "mParticle_Button.framework"
-            BlueprintName = "mParticle-Button"
+            BlueprintIdentifier = "DE81191F214C4CF900AAC951"
+            BuildableName = "mParticle-ButtonTests.xctest"
+            BlueprintName = "mParticle-ButtonTests"
             ReferencedContainer = "container:mParticle-Button.xcodeproj">
          </BuildableReference>
       </MacroExpansion>

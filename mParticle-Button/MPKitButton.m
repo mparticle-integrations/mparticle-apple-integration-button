@@ -1,11 +1,26 @@
+//
+//  MPKitButton.m
+//
+//  Copyright 2019 Button, Inc.
+//
+//  Licensed under the Apache License, Version 2.0 (the "License");
+//  you may not use this file except in compliance with the License.
+//  You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an "AS IS" BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  See the License for the specific language governing permissions and
+//  limitations under the License.
+//
+
 #import "MPKitButton.h"
-#include <sys/types.h>
-#include <sys/sysctl.h>
 
 @import ButtonMerchant;
-@import AdSupport.ASIdentifierManager;
 
-static NSString * const BTNMPKitVersion = @"1.0.0";
+static NSString * const BTNMPKitVersion = @"2.0.0";
 
 static NSString * const BTNReferrerTokenDefaultsKey   = @"com.usebutton.referrer";
 static NSString * const BTNLinkFetchStatusDefaultsKey = @"com.usebutton.link.fetched";
@@ -31,7 +46,6 @@ NSString * const MPKitButtonIntegrationAttribution = @"com.usebutton.source_toke
 - (NSString *)attributionToken {
     return ButtonMerchant.attributionToken;
 }
-
 
 @end
 
@@ -125,12 +139,9 @@ NSString * const MPKitButtonIntegrationAttribution = @"com.usebutton.source_toke
 
 - (void)checkForAttribution {
     [ButtonMerchant handlePostInstallURL:^(NSURL * _Nullable postInstallURL, NSError * _Nullable error) {
-        if (error) {
+        if (error || !postInstallURL) {
             NSError *attributionError = [self errorWithMessage:@"No attribution information available."];
             [self->_kitApi onAttributionCompleteWithResult:nil error:attributionError];
-            return;
-        }
-        if (!postInstallURL) {
             return;
         }
         NSDictionary *linkInfo = @{ BTNPostInstallURLKey: postInstallURL};
@@ -139,6 +150,5 @@ NSString * const MPKitButtonIntegrationAttribution = @"com.usebutton.source_toke
         [self->_kitApi onAttributionCompleteWithResult:attributionResult error:nil];
     }];
 }
-
 
 @end

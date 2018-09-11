@@ -1,1 +1,2 @@
 github "mparticle/mparticle-apple-sdk" ~> 7.10.0
+github "button/button-merchant-ios" ~> 1.0
