@@ -112,8 +112,8 @@ class mParticle_ButtonTests: XCTestCase {
 
         // Assert
         testKitApi.onAttributionCompleteTestHandler = { result, error in
-            let actualURL = result?.linkInfo[BTNPostInstallURLKey] as? URL
-            XCTAssertEqual(actualURL?.absoluteString, url.absoluteString)
+            let actualURL = result?.linkInfo[BTNPostInstallURLKey] as? String
+            XCTAssertEqual(actualURL, url.absoluteString)
             XCTAssertNotNil(url)
             XCTAssertNil(error)
             expectation.fulfill()

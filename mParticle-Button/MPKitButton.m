@@ -144,7 +144,7 @@ NSString * const MPKitButtonIntegrationAttribution = @"com.usebutton.source_toke
             [self->_kitApi onAttributionCompleteWithResult:nil error:attributionError];
             return;
         }
-        NSDictionary *linkInfo = @{ BTNPostInstallURLKey: postInstallURL};
+        NSDictionary *linkInfo = @{ BTNPostInstallURLKey: postInstallURL.absoluteString };
         MPAttributionResult *attributionResult = [[MPAttributionResult alloc] init];
         attributionResult.linkInfo = linkInfo;
         [self->_kitApi onAttributionCompleteWithResult:attributionResult error:nil];
