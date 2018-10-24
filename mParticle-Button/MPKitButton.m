@@ -54,6 +54,7 @@ NSString * const MPKitButtonIntegrationAttribution = @"com.usebutton.source_toke
 
 @interface MPKitButton ()
 
+@property (nonatomic, strong) MParticle *mParticleInstance;
 @property (nonatomic, strong, nonnull) MPIButton *button;
 @property (nonatomic, copy)   NSString *applicationId;
 @property (nonatomic, strong) NSURLSession *session;
@@ -74,6 +75,25 @@ NSString * const MPKitButtonIntegrationAttribution = @"com.usebutton.source_toke
     MPKitRegister *kitRegister = [[MPKitRegister alloc] initWithName:@"Button"
                                                            className:NSStringFromClass(self)];
     [MParticle registerExtension:kitRegister];
+}
+
+
+- (MParticle *)mParticleInstance {
+    if (!_mParticleInstance) {
+        return [MParticle sharedInstance];
+    }
+
+    return _mParticleInstance;
+}
+
+
+- (void)trackIncomingURL:(NSURL *)url {
+    [ButtonMerchant trackIncomingURL:url];
+    NSString *attributionToken = ButtonMerchant.attributionToken;
+    if (attributionToken) {
+        NSDictionary<NSString *, NSString *> *integrationAttributes = @{ MPKitButtonIntegrationAttribution: attributionToken };
+        [_mParticleInstance setIntegrationAttributes:integrationAttributes forKit:[[self class] kitCode]];
+    }
 }
 
 
@@ -109,21 +129,21 @@ NSString * const MPKitButtonIntegrationAttribution = @"com.usebutton.source_toke
 
 
 - (nonnull MPKitExecStatus *)openURL:(nonnull NSURL *)url options:(nullable NSDictionary<NSString *, id> *)options {
-    [ButtonMerchant trackIncomingURL:url];
+    [self trackIncomingURL:url];
     return [[MPKitExecStatus alloc] initWithSDKCode:[[self class] kitCode]
                                          returnCode:MPKitReturnCodeSuccess];
 }
 
 
 - (nonnull MPKitExecStatus *)openURL:(nonnull NSURL *)url sourceApplication:(nullable NSString *)sourceApplication annotation:(nullable id)annotation {
-    [ButtonMerchant trackIncomingURL:url];
+    [self trackIncomingURL:url];
     return [[MPKitExecStatus alloc] initWithSDKCode:[[self class] kitCode]
                                          returnCode:MPKitReturnCodeSuccess];
 }
 
 
 - (nonnull MPKitExecStatus *)continueUserActivity:(nonnull NSUserActivity *)userActivity restorationHandler:(void(^ _Nonnull)(NSArray * _Nullable restorableObjects))restorationHandler {
-    [ButtonMerchant trackIncomingUserActivity:userActivity];
+    [self trackIncomingURL:userActivity.webpageURL];
     return [[MPKitExecStatus alloc] initWithSDKCode:[[self class] kitCode]
                                          returnCode:MPKitReturnCodeSuccess];
 }

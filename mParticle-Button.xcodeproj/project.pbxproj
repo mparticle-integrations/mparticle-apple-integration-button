@@ -12,6 +12,7 @@
 		DB0773E41DB916B80031F3E3 /* MPKitButton.m in Sources */ = {isa = PBXBuildFile; fileRef = DB0773E21DB916B80031F3E3 /* MPKitButton.m */; };
 		DE811925214C4CF900AAC951 /* mParticle_Button.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DB0773D61DB916610031F3E3 /* mParticle_Button.framework */; };
 		DE81192F214C4F5500AAC951 /* mParticle-ButtonTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE81192D214C4F5400AAC951 /* mParticle-ButtonTests.swift */; };
+		DEAA37222180E11800915875 /* MPKitButton+ButtonTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DEAA37212180E11800915875 /* MPKitButton+ButtonTests.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -34,6 +35,9 @@
 		DE811920214C4CF900AAC951 /* mParticle-ButtonTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "mParticle-ButtonTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DE81192D214C4F5400AAC951 /* mParticle-ButtonTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "mParticle-ButtonTests.swift"; sourceTree = "<group>"; };
 		DE81192E214C4F5400AAC951 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		DEAA371F2180E11700915875 /* mParticle-ButtonTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "mParticle-ButtonTests-Bridging-Header.h"; sourceTree = "<group>"; };
+		DEAA37202180E11800915875 /* MPKitButton+ButtonTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MPKitButton+ButtonTests.h"; sourceTree = "<group>"; };
+		DEAA37212180E11800915875 /* MPKitButton+ButtonTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "MPKitButton+ButtonTests.m"; sourceTree = "<group>"; };
 		DEEEE6A3214C57BF006B5C06 /* ButtonMerchant.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ButtonMerchant.framework; path = Carthage/Build/iOS/ButtonMerchant.framework; sourceTree = "<group>"; };
 		DEEEE6A4214C57CA006B5C06 /* mParticle_Apple_SDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = mParticle_Apple_SDK.framework; path = Carthage/Build/iOS/mParticle_Apple_SDK.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -100,10 +104,21 @@
 		DE81192C214C4F5400AAC951 /* mParticle-ButtonTests */ = {
 			isa = PBXGroup;
 			children = (
+				DEAA37232180E11F00915875 /* Helpers */,
 				DE81192D214C4F5400AAC951 /* mParticle-ButtonTests.swift */,
 				DE81192E214C4F5400AAC951 /* Info.plist */,
 			);
 			path = "mParticle-ButtonTests";
+			sourceTree = "<group>";
+		};
+		DEAA37232180E11F00915875 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				DEAA371F2180E11700915875 /* mParticle-ButtonTests-Bridging-Header.h */,
+				DEAA37202180E11800915875 /* MPKitButton+ButtonTests.h */,
+				DEAA37212180E11800915875 /* MPKitButton+ButtonTests.m */,
+			);
+			path = Helpers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -178,6 +193,7 @@
 					DE81191F214C4CF900AAC951 = {
 						CreatedOnToolsVersion = 9.4.1;
 						DevelopmentTeam = 39F27QYP2C;
+						LastSwiftMigration = 0940;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -266,6 +282,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DE81192F214C4F5500AAC951 /* mParticle-ButtonTests.swift in Sources */,
+				DEAA37222180E11800915875 /* MPKitButton+ButtonTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -411,7 +428,7 @@
 				);
 				INFOPLIST_FILE = "mParticle-Button/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.mparticle.mParticle-Button";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
@@ -439,7 +456,7 @@
 				);
 				INFOPLIST_FILE = "mParticle-Button/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.mparticle.mParticle-Button";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
@@ -454,6 +471,7 @@
 			buildSettings = {
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -465,12 +483,13 @@
 				);
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = "mParticle-ButtonTests/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.usebutton.mParticle-ButtonTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OBJC_BRIDGING_HEADER = "mParticle-ButtonTests/Helpers/mParticle-ButtonTests-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -482,6 +501,7 @@
 			buildSettings = {
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -493,11 +513,12 @@
 				);
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = "mParticle-ButtonTests/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.usebutton.mParticle-ButtonTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "mParticle-ButtonTests/Helpers/mParticle-ButtonTests-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

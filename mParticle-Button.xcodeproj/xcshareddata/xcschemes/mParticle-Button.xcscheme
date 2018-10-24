@@ -28,7 +28,7 @@
             buildForAnalyzing = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "DE0F93972148654000E0FF7F"
+               BlueprintIdentifier = "DE81191F214C4CF900AAC951"
                BuildableName = "mParticle-ButtonTests.xctest"
                BlueprintName = "mParticle-ButtonTests"
                ReferencedContainer = "container:mParticle-Button.xcodeproj">

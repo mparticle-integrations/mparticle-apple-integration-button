@@ -20,6 +20,16 @@ extension ButtonMerchant {
     }
 }
 
+class TestMParticle: MParticle {
+    var actualIntegrationAttributes: [String : String]!
+    var actualKitCode: NSNumber!
+    override func setIntegrationAttributes(_ attributes: [String : String], forKit kitCode: NSNumber) -> MPKitExecStatus {
+        actualIntegrationAttributes = attributes
+        actualKitCode = kitCode
+        return MPKitExecStatus()
+    }
+}
+
 class TestMPKitAPI: MPKitAPI {
     var onAttributionCompleteTestHandler: ((MPAttributionResult?, NSError?) -> ())!
     open override func onAttributionComplete(with result: MPAttributionResult?, error: Error?) {
@@ -27,10 +37,10 @@ class TestMPKitAPI: MPKitAPI {
     }
 }
 
-
 class mParticle_ButtonTests: XCTestCase {
 
-    var buttonKit = MPKitButton()
+    var testMParticleInstance: TestMParticle!
+    var buttonKit: MPKitButton!
     var buttonInstance: MPIButton!
     var applicationId: String = "app-\(arc4random_uniform(10000))"
 
@@ -42,9 +52,16 @@ class mParticle_ButtonTests: XCTestCase {
         Stub.error = nil
 
         // Start the Button kit.
+        buttonKit = MPKitButton()
+        testMParticleInstance = TestMParticle()
+        buttonKit.mParticleInstance = testMParticleInstance
         let configuration = ["application_id": applicationId]
         buttonKit.didFinishLaunching(withConfiguration: configuration)
         buttonInstance = buttonKit.providerKitInstance as! MPIButton
+    }
+
+    func testKitCode() {
+        XCTAssertEqual(MPKitButton.kitCode(), 1022)
     }
 
     func testDidFinishLaunchingWithConfiguration() {
@@ -63,6 +80,7 @@ class mParticle_ButtonTests: XCTestCase {
         // Assert
         XCTAssertEqual(ButtonMerchant.attributionToken, attributionToken)
         XCTAssertEqual(buttonInstance.attributionToken, attributionToken)
+        XCTAssertEqual(testMParticleInstance.actualIntegrationAttributes, [ "com.usebutton.source_token": attributionToken ])
     }
 
     func testOpenURLSourceApplicationAnnotationTracks() {
@@ -77,6 +95,7 @@ class mParticle_ButtonTests: XCTestCase {
         // Assert
         XCTAssertEqual(ButtonMerchant.attributionToken, attributionToken)
         XCTAssertEqual(buttonInstance.attributionToken, attributionToken)
+        XCTAssertEqual(testMParticleInstance.actualIntegrationAttributes, [ "com.usebutton.source_token": attributionToken ])
     }
 
     func testContinueUserActivityTracks() {
@@ -93,6 +112,7 @@ class mParticle_ButtonTests: XCTestCase {
         // Assert
         XCTAssertEqual(ButtonMerchant.attributionToken, attributionToken)
         XCTAssertEqual(buttonInstance.attributionToken, attributionToken)
+        XCTAssertEqual(testMParticleInstance.actualIntegrationAttributes, [ "com.usebutton.source_token": attributionToken ])
     }
 
     func testPostInstallCheckOnAttribution() {
