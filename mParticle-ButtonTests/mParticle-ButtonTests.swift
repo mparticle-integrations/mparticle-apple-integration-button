@@ -57,7 +57,7 @@ class mParticle_ButtonTests: XCTestCase {
         buttonKit.mParticleInstance = testMParticleInstance
         let configuration = ["application_id": applicationId]
         buttonKit.didFinishLaunching(withConfiguration: configuration)
-        buttonInstance = buttonKit.providerKitInstance as! MPIButton
+        buttonInstance = buttonKit.providerKitInstance as? MPIButton
     }
 
     func testKitCode() {
