@@ -91,13 +91,13 @@ NSString * const MPKitButtonIntegrationAttribution = @"com.usebutton.source_toke
 
 - (MPKitExecStatus *)didFinishLaunchingWithConfiguration:(NSDictionary *)configuration {
     MPKitExecStatus *execStatus = nil;
-    
+
     _applicationId = [configuration[@"application_id"] copy];
     if (!_applicationId) {
         execStatus = [[MPKitExecStatus alloc] initWithSDKCode:[[self class] kitCode] returnCode:MPKitReturnCodeRequirementsNotMet];
         return execStatus;
     }
-    
+
     _fileManager  = [NSFileManager defaultManager];
     _userDefaults = [NSUserDefaults standardUserDefaults];
     _device       = [UIDevice currentDevice];
@@ -105,21 +105,21 @@ NSString * const MPKitButtonIntegrationAttribution = @"com.usebutton.source_toke
     _locale       = [NSLocale currentLocale];
     _mainBundle   = [NSBundle mainBundle];
     _IFAManager   = [ASIdentifierManager sharedManager];
-    
+
     _configuration = configuration;
     _started       = YES;
-    
+
     dispatch_async(dispatch_get_main_queue(), ^{
         NSDictionary *userInfo = @{ mParticleKitInstanceKey: [[self class] kitCode] };
-        
+
         [[NSNotificationCenter defaultCenter] postNotificationName:mParticleKitDidBecomeActiveNotification
                                                             object:nil
                                                           userInfo:userInfo];
         [self checkForAttribution];
     });
-    
+
     execStatus = [[MPKitExecStatus alloc] initWithSDKCode:[[self class] kitCode] returnCode:MPKitReturnCodeSuccess];
-    
+
     return execStatus;
 }
 
@@ -135,26 +135,26 @@ NSString * const MPKitButtonIntegrationAttribution = @"com.usebutton.source_toke
 - (void)checkForAttribution {
     BOOL isNewInstall = [self isNewInstall];
     BOOL didFetchLink = [self.userDefaults boolForKey:BTNLinkFetchStatusDefaultsKey];
-    
+
     if (!isNewInstall || didFetchLink || !self.applicationId.length) {
         NSError *error = [self errorWithMessage:@"Requirements not met"];
         [_kitApi onAttributionCompleteWithResult:nil error:error];
         return;
     }
-    
+
     [self.userDefaults setBool:YES forKey:BTNLinkFetchStatusDefaultsKey];
-    
+
     if (!self.session) {
         self.session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
     }
-    
+
     NSURL *url = [NSURL URLWithString:@"https://api.usebutton.com/v1/web/deferred-deeplink"];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     request.HTTPMethod = @"POST";
     [request addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     [request addValue:@"application/json" forHTTPHeaderField:@"Accept"];
     [request addValue:[self userAgentString] forHTTPHeaderField:@"User-Agent"];
-    
+
     NSMutableDictionary *signals = [NSMutableDictionary dictionary];
     signals[@"source"]     = @"mparticle";
     signals[@"os"]         = @"ios";
@@ -165,30 +165,30 @@ NSString * const MPKitButtonIntegrationAttribution = @"com.usebutton.source_toke
     signals[@"screen"]     = [NSString stringWithFormat:@"%@x%@",
                               @(self.screen.bounds.size.width * self.screen.scale),
                               @(self.screen.bounds.size.height * self.screen.scale)];
-    
+
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     params[@"application_id"] = self.applicationId ?: @"";
     params[@"ifa"]            = self.IFAManager.advertisingIdentifier.UUIDString ?: @"";
     params[@"signals"]        = signals;
-    
+
     NSError *error = nil;
     NSData *requestData = nil;
-    
+
     @try {
         requestData = [NSJSONSerialization dataWithJSONObject:[params copy] options:0 error:&error];
     } @catch (NSException *exception) {
     }
-    
+
     if (!requestData && error) {
         NSError *error = [self errorWithMessage:[NSString stringWithFormat:@"JSON serialization of request data failed: %@", error]];
         [_kitApi onAttributionCompleteWithResult:nil error:error];
         return;
     }
-    
+
     request.HTTPBody = requestData;
     [[self.session dataTaskWithRequest:request completionHandler:
       ^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-          
+
           NSDictionary *linkInfo = nil;
           if (!error) {
               id responseObject    = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
@@ -201,18 +201,18 @@ NSString * const MPKitButtonIntegrationAttribution = @"com.usebutton.source_toke
                   NSDictionary *object = responseObject[@"object"];
                   if ([object[@"attribution"] isKindOfClass:[NSDictionary class]]) {
                       NSString *referrer = object[@"attribution"][@"btn_ref"];
-                      
+
                       if (referrer.length) {
                           self.button.referrerToken = referrer;
                       }
                   }
-                  
+
                   if ([object[@"action"] length]) {
                       linkInfo = @{ BTNDeferredDeepLinkURLKey: object[@"action"], MPKitButtonAttributionResultKey: object[@"action"] };
-                      
+
                       MPAttributionResult *attributionResult = [[MPAttributionResult alloc] init];
                       attributionResult.linkInfo = linkInfo;
-                      
+
                       [self->_kitApi onAttributionCompleteWithResult:attributionResult error:nil];
                   }
                   else {
@@ -225,13 +225,13 @@ NSString * const MPKitButtonIntegrationAttribution = @"com.usebutton.source_toke
                   [self->_kitApi onAttributionCompleteWithResult:nil error:attributionError];
                   return;
               }
-              
+
           } else {
               NSError *attributionError = [self errorWithMessage:[NSString stringWithFormat:@"Data task failed with error: %@", error]];
               [self->_kitApi onAttributionCompleteWithResult:nil error:attributionError];
               return;
           }
-          
+
     }] resume];
 }
 
@@ -263,7 +263,7 @@ NSString * const MPKitButtonIntegrationAttribution = @"com.usebutton.source_toke
     if (!_button) {
         _button = [[MPIButton alloc] init];
     }
-    
+
     return _button;
 }
 
@@ -274,7 +274,7 @@ NSString * const MPKitButtonIntegrationAttribution = @"com.usebutton.source_toke
                                                                       value:-12
                                                                      toDate:[NSDate date]
                                                                     options:0];
-    
+
     return [[attributes fileCreationDate] compare:twelveHoursAgo] == NSOrderedDescending;
 }
 
@@ -283,9 +283,9 @@ NSString * const MPKitButtonIntegrationAttribution = @"com.usebutton.source_toke
     Class queryItemClass = NSClassFromString(@"NSURLQueryItem");
     if (queryItemClass) {
         NSURLComponents *urlComponents = [NSURLComponents componentsWithString:url.absoluteString];
-        
+
         for (NSURLQueryItem *item in urlComponents.queryItems) {
-            
+
             if ([item.name isEqualToString:@"btn_ref"] && item.value.length) {
                 self.button.referrerToken = item.value;
                 break;
@@ -295,7 +295,7 @@ NSString * const MPKitButtonIntegrationAttribution = @"com.usebutton.source_toke
     dispatch_async(dispatch_get_main_queue(), ^{
         [self checkForAttribution];
     });
-    
+
 }
 
 
