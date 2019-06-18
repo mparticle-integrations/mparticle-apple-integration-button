@@ -92,7 +92,7 @@ NSString * const MPKitButtonIntegrationAttribution = @"com.usebutton.source_toke
     NSString *attributionToken = ButtonMerchant.attributionToken;
     if (attributionToken) {
         NSDictionary<NSString *, NSString *> *integrationAttributes = @{ MPKitButtonIntegrationAttribution: attributionToken };
-        [_mParticleInstance setIntegrationAttributes:integrationAttributes forKit:[[self class] kitCode]];
+        [self.mParticleInstance setIntegrationAttributes:integrationAttributes forKit:[[self class] kitCode]];
     }
 }
 
@@ -114,6 +114,8 @@ NSString * const MPKitButtonIntegrationAttribution = @"com.usebutton.source_toke
     _started       = YES;
 
     dispatch_async(dispatch_get_main_queue(), ^{
+        NSDictionary *userInfo = @{ mParticleKitInstanceKey: [[self class] kitCode] };
+        [[NSNotificationCenter defaultCenter] postNotificationName:mParticleKitDidBecomeActiveNotification object:nil userInfo:userInfo];
         [self checkForAttribution];
     });
 
