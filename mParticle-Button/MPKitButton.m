@@ -88,6 +88,9 @@ NSString * const MPKitButtonIntegrationAttribution = @"com.usebutton.source_toke
 
 
 - (void)trackIncomingURL:(NSURL *)url {
+    if (!url) {
+        return;
+    }
     [ButtonMerchant trackIncomingURL:url];
     NSString *attributionToken = ButtonMerchant.attributionToken;
     if (attributionToken) {
