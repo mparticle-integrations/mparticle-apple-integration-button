@@ -57,7 +57,7 @@ NSString * const MPKitButtonIntegrationAttribution = @"com.usebutton.source_toke
 @property (nonatomic, strong) MParticle *mParticleInstance;
 @property (nonatomic, strong, nonnull) MPIButton *button;
 @property (nonatomic, copy)   NSString *applicationId;
-@property (nonatomic, strong) NSURLSession *session;
+@property (nonatomic, strong) NSNotificationCenter *defaultCenter;
 
 @end
 
@@ -80,10 +80,17 @@ NSString * const MPKitButtonIntegrationAttribution = @"com.usebutton.source_toke
 
 - (MParticle *)mParticleInstance {
     if (!_mParticleInstance) {
-        return [MParticle sharedInstance];
+        _mParticleInstance = [MParticle sharedInstance];
     }
-
     return _mParticleInstance;
+}
+
+
+- (NSNotificationCenter *)defaultCenter {
+    if (!_defaultCenter) {
+        _defaultCenter = NSNotificationCenter.defaultCenter;
+    }
+    return _defaultCenter;
 }
 
 
@@ -92,11 +99,6 @@ NSString * const MPKitButtonIntegrationAttribution = @"com.usebutton.source_toke
         return;
     }
     [ButtonMerchant trackIncomingURL:url];
-    NSString *attributionToken = ButtonMerchant.attributionToken;
-    if (attributionToken) {
-        NSDictionary<NSString *, NSString *> *integrationAttributes = @{ MPKitButtonIntegrationAttribution: attributionToken };
-        [self.mParticleInstance setIntegrationAttributes:integrationAttributes forKit:[[self class] kitCode]];
-    }
 }
 
 
@@ -110,8 +112,12 @@ NSString * const MPKitButtonIntegrationAttribution = @"com.usebutton.source_toke
         execStatus = [[MPKitExecStatus alloc] initWithSDKCode:[[self class] kitCode] returnCode:MPKitReturnCodeRequirementsNotMet];
         return execStatus;
     }
-
+    
     [ButtonMerchant configureWithApplicationId:_applicationId];
+    [self.defaultCenter addObserver:self
+                           selector:@selector(observeAttributionTokenDidChangeNotification:)
+                               name:ButtonMerchant.AttributionTokenDidChangeNotification
+                             object:nil];
 
     _configuration = configuration;
     _started       = YES;
@@ -174,6 +180,15 @@ NSString * const MPKitButtonIntegrationAttribution = @"com.usebutton.source_toke
         attributionResult.linkInfo = linkInfo;
         [self->_kitApi onAttributionCompleteWithResult:attributionResult error:nil];
     }];
+}
+
+
+- (void)observeAttributionTokenDidChangeNotification:(NSNotification *)note {
+    NSString *attributionToken = note.userInfo[ButtonMerchant.AttributionTokenKey];
+    if (attributionToken) {
+        NSDictionary<NSString *, NSString *> *integrationAttributes = @{ MPKitButtonIntegrationAttribution: attributionToken };
+        [self.mParticleInstance setIntegrationAttributes:integrationAttributes forKit:[[self class] kitCode]];
+    }
 }
 
 @end

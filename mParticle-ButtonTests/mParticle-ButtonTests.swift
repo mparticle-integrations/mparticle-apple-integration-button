@@ -37,6 +37,22 @@ class TestMPKitAPI: MPKitAPI {
     }
 }
 
+class TestNotificationCenter: NotificationCenter {
+    var actualObserver: MPKitButton?
+    var actualSelector: Selector?
+    var actualName: NSNotification.Name?
+    var actualObject: Any?
+    override func addObserver(_ observer: Any,
+                              selector aSelector: Selector,
+                              name aName: NSNotification.Name?,
+                              object anObject: Any?) {
+        actualObserver = observer as? MPKitButton
+        actualSelector = aSelector
+        actualName = aName
+        actualObject = anObject
+    }
+}
+
 class mParticle_ButtonTests: XCTestCase {
 
     var testMParticleInstance: TestMParticle!
@@ -65,7 +81,20 @@ class mParticle_ButtonTests: XCTestCase {
     }
 
     func testDidFinishLaunchingWithConfiguration() {
+        // Arrange
+        let testNotificationCenter = TestNotificationCenter()
+        buttonKit.defaultCenter = testNotificationCenter
+        
+        // Act
+        let configuration = ["application_id": applicationId]
+        buttonKit.didFinishLaunching(withConfiguration: configuration)
+        
+        // Assert
         XCTAssertEqual(Actual.applicationId, applicationId)
+        XCTAssertEqual(testNotificationCenter.actualObserver, buttonKit)
+        XCTAssertEqual(testNotificationCenter.actualSelector, NSSelectorFromString("observeAttributionTokenDidChangeNotification:"))
+        XCTAssertEqual(testNotificationCenter.actualName, NSNotification.Name.Button.AttributionTokenDidChange)
+        XCTAssertNil(testNotificationCenter.actualObject)
     }
 
     func testOpenURLOptionsTracks() {
@@ -190,5 +219,17 @@ class mParticle_ButtonTests: XCTestCase {
         }
 
         self.wait(for: [expectation], timeout: 1.0)
+    }
+    
+    func testAttributionDidChangeNotificationSetsIntegrationAttributes() {
+        // Arrange
+        let attributionToken = "faketok-from-notification"
+        
+        // Act
+        NotificationCenter.default.post(name: Notification.Name.Button.AttributionTokenDidChange,
+                                        object: nil,
+                                        userInfo: [Notification.Key.NewToken: attributionToken])
+        // Assert
+        XCTAssertEqual(testMParticleInstance.actualIntegrationAttributes, [ "com.usebutton.source_token": attributionToken ])
     }
 }
