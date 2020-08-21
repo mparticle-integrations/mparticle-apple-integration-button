@@ -4,6 +4,7 @@ import mParticle_Button
 
 class Actual {
     static var applicationId: String?
+    static var didCallClearAllData = false
 }
 
 class Stub {
@@ -17,6 +18,9 @@ extension ButtonMerchant {
     }
     @objc public static func handlePostInstallURL(_ completion: @escaping (URL?, Error?) -> Void) {
         completion(Stub.url, Stub.error)
+    }
+    @objc public static func clearAllData() {
+        Actual.didCallClearAllData = true
     }
 }
 
@@ -231,5 +235,16 @@ class mParticle_ButtonTests: XCTestCase {
                                         userInfo: [Notification.Key.NewToken: attributionToken])
         // Assert
         XCTAssertEqual(testMParticleInstance.actualIntegrationAttributes, [ "com.usebutton.source_token": attributionToken ])
+    }
+    
+    func testLogoutClearsAllData() {
+        // Arrange
+        buttonKit = MPKitButton()
+        
+        // Act
+        buttonKit.logout()
+        
+        // Assert
+        XCTAssertTrue(Actual.didCallClearAllData)
     }
 }

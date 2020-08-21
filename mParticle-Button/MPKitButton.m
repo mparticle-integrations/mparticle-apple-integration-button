@@ -159,6 +159,12 @@ NSString * const MPKitButtonIntegrationAttribution = @"com.usebutton.source_toke
                                          returnCode:MPKitReturnCodeSuccess];
 }
 
+- (nonnull MPKitExecStatus *)logout {
+    [ButtonMerchant clearAllData];
+    return [[MPKitExecStatus alloc] initWithSDKCode:[[self class] kitCode]
+                                         returnCode:MPKitReturnCodeSuccess];
+}
+
 
 #pragma mark - Private Methods
 
