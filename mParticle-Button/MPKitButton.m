@@ -166,6 +166,37 @@ NSString * const MPKitButtonIntegrationAttribution = @"com.usebutton.source_toke
 }
 
 
+- (nonnull MPKitExecStatus *)logBaseEvent:(nonnull MPCommerceEvent *)event {
+    if (![event isKindOfClass:[MPCommerceEvent class]] || !event.products) {
+        return [[MPKitExecStatus alloc] initWithSDKCode:[[self class] kitCode]
+                                             returnCode:MPKitReturnCodeUnavailable];
+    }
+    MPKitReturnCode code = MPKitReturnCodeUnavailable;
+    
+    NSArray <ButtonProduct *> *products = [self buttonProductsFromProducts:event.products];
+    
+    switch (event.action) {
+        case MPCommerceEventActionViewDetail:
+            [ButtonMerchant.activity productViewed:products.firstObject];
+            code = MPKitReturnCodeSuccess;
+            break;
+        case MPCommerceEventActionAddToCart:
+            [ButtonMerchant.activity productAddedToCart:products.firstObject];
+            code = MPKitReturnCodeSuccess;
+            break;
+        case MPCommerceEventActionCheckout:
+            [ButtonMerchant.activity cartViewed:products];
+            code = MPKitReturnCodeSuccess;
+            break;
+        default:
+            break;
+    }
+    
+    return [[MPKitExecStatus alloc] initWithSDKCode:[[self class] kitCode]
+                                         returnCode:code];
+}
+
+
 #pragma mark - Private Methods
 
 - (NSError *)errorWithMessage:(NSString *)message {
@@ -195,6 +226,24 @@ NSString * const MPKitButtonIntegrationAttribution = @"com.usebutton.source_toke
         NSDictionary<NSString *, NSString *> *integrationAttributes = @{ MPKitButtonIntegrationAttribution: attributionToken };
         [self.mParticleInstance setIntegrationAttributes:integrationAttributes forKit:[[self class] kitCode]];
     }
+}
+
+
+- (NSArray<ButtonProduct *> *)buttonProductsFromProducts:(NSArray <MPProduct *> *)products {
+    NSMutableArray *buttonProducts = [NSMutableArray array];
+    for (MPProduct *product in products) {
+        ButtonProduct *buttonProduct = [ButtonProduct new];
+        buttonProduct.name = product.name;
+        buttonProduct.id = product.sku;
+        buttonProduct.value = (NSInteger)(product.price.doubleValue * 100);
+        buttonProduct.quantity = product.quantity.integerValue;
+        if (product.category) {
+            buttonProduct.categories = @[product.category];
+        }
+        buttonProduct.attributes = @{@"btn_product_count" : @(products.count).stringValue};
+        [buttonProducts addObject:buttonProduct];
+    }
+    return buttonProducts;
 }
 
 @end

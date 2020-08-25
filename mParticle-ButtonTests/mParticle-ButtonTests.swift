@@ -5,6 +5,7 @@ import mParticle_Button
 class Actual {
     static var applicationId: String?
     static var didCallClearAllData = false
+    static var activity: TestActivity!
 }
 
 class Stub {
@@ -21,6 +22,32 @@ extension ButtonMerchant {
     }
     @objc public static func clearAllData() {
         Actual.didCallClearAllData = true
+    }
+    static var activity: Activity {
+        return Actual.activity
+    }
+}
+
+class TestActivity: Activity {
+    var didCallProductViewed = false
+    var didCallProductAddedToCart = false
+    var didCallCartViewed = false
+    var actualProduct: ButtonProductCompatible?
+    var actualProducts: [ButtonProductCompatible]?
+    
+    func productViewed(_ product: ButtonProductCompatible?) {
+        didCallProductViewed = true
+        actualProduct = product
+    }
+    
+    func productAddedToCart(_ product: ButtonProductCompatible?) {
+        didCallProductAddedToCart = true
+        actualProduct = product
+    }
+    
+    func cartViewed(_ products: [ButtonProductCompatible]?) {
+        didCallCartViewed = true
+        actualProducts = products
     }
 }
 
@@ -68,6 +95,8 @@ class mParticle_ButtonTests: XCTestCase {
         super.setUp()
         // Reset all static test output & stubs.
         Actual.applicationId = nil
+        Actual.didCallClearAllData = false
+        Actual.activity = TestActivity()
         Stub.url = nil
         Stub.error = nil
 
@@ -235,6 +264,72 @@ class mParticle_ButtonTests: XCTestCase {
                                         userInfo: [Notification.Key.NewToken: attributionToken])
         // Assert
         XCTAssertEqual(testMParticleInstance.actualIntegrationAttributes, [ "com.usebutton.source_token": attributionToken ])
+    }
+    
+    func testLogProductViewedEventInvokesButtonActivity() {
+        // Arrange
+        buttonKit = MPKitButton()
+        let product = MPProduct(name: "some name", sku: "some sku", quantity: NSNumber(integerLiteral: 2), price: NSNumber(floatLiteral: 1.99))
+        product.category = "some category"
+        let event = MPCommerceEvent(action: .viewDetail, product: product)
+        event.addProduct(MPProduct())
+        
+        // Act
+        buttonKit.logBaseEvent(event)
+        
+        // Assert
+        XCTAssertTrue(Actual.activity.didCallProductViewed)
+        XCTAssertNotNil(Actual.activity.actualProduct)
+        XCTAssertEqual(Actual.activity.actualProduct?.name, "some name")
+        XCTAssertEqual(Actual.activity.actualProduct?.id, "some sku")
+        XCTAssertEqual(Actual.activity.actualProduct?.categories, ["some category"])
+        XCTAssertEqual(Actual.activity.actualProduct?.quantity, 2)
+        XCTAssertEqual(Actual.activity.actualProduct?.value, 199)
+        XCTAssertEqual(Actual.activity.actualProduct?.attributes, ["btn_product_count" : "2"])
+    }
+    
+    func testLogProductAddedToCartEventInvokesButtonActivity() {
+        // Arrange
+        buttonKit = MPKitButton()
+        let product = MPProduct(name: "some name", sku: "some sku", quantity: NSNumber(integerLiteral: 2), price: NSNumber(floatLiteral: 1.99))
+        product.category = "some category"
+        let event = MPCommerceEvent(action: .addToCart, product: product)
+        event.addProduct(MPProduct())
+        
+        // Act
+        buttonKit.logBaseEvent(event)
+        
+        // Assert
+        XCTAssertTrue(Actual.activity.didCallProductAddedToCart)
+        XCTAssertNotNil(Actual.activity.actualProduct)
+        XCTAssertEqual(Actual.activity.actualProduct?.name, "some name")
+        XCTAssertEqual(Actual.activity.actualProduct?.id, "some sku")
+        XCTAssertEqual(Actual.activity.actualProduct?.categories, ["some category"])
+        XCTAssertEqual(Actual.activity.actualProduct?.quantity, 2)
+        XCTAssertEqual(Actual.activity.actualProduct?.value, 199)
+        XCTAssertEqual(Actual.activity.actualProduct?.attributes, ["btn_product_count" : "2"])
+    }
+    
+    func testLogCheckoutEventInvokesButtonActivity() {
+        // Arrange
+        buttonKit = MPKitButton()
+        let product = MPProduct(name: "some name", sku: "some sku", quantity: NSNumber(integerLiteral: 2), price: NSNumber(floatLiteral: 1.99))
+        product.category = "some category"
+        let event = MPCommerceEvent(action: .checkout, product: product)
+        event.addProduct(MPProduct())
+
+        // Act
+        buttonKit.logBaseEvent(event)
+
+        // Assert
+        XCTAssertTrue(Actual.activity.didCallCartViewed)
+        XCTAssertNotNil(Actual.activity.actualProducts)
+        XCTAssertEqual(Actual.activity.actualProducts?.first?.name, "some name")
+        XCTAssertEqual(Actual.activity.actualProducts?.first?.id, "some sku")
+        XCTAssertEqual(Actual.activity.actualProducts?.first?.categories, ["some category"])
+        XCTAssertEqual(Actual.activity.actualProducts?.first?.quantity, 2)
+        XCTAssertEqual(Actual.activity.actualProducts?.first?.value, 199)
+        XCTAssertNotNil(Actual.activity.actualProducts?[1])
     }
     
     func testLogoutClearsAllData() {
