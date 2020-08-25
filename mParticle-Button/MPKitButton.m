@@ -47,6 +47,7 @@ NSString * const MPKitButtonIntegrationAttribution = @"com.usebutton.source_toke
     return ButtonMerchant.attributionToken;
 }
 
+
 @end
 
 
@@ -159,7 +160,8 @@ NSString * const MPKitButtonIntegrationAttribution = @"com.usebutton.source_toke
                                          returnCode:MPKitReturnCodeSuccess];
 }
 
-- (nonnull MPKitExecStatus *)logout {
+
+- (nonnull MPKitExecStatus *)onLogoutComplete:(nonnull FilteredMParticleUser *)user request:(nonnull FilteredMPIdentityApiRequest *)request {
     [ButtonMerchant clearAllData];
     return [[MPKitExecStatus alloc] initWithSDKCode:[[self class] kitCode]
                                          returnCode:MPKitReturnCodeSuccess];

@@ -337,7 +337,7 @@ class mParticle_ButtonTests: XCTestCase {
         buttonKit = MPKitButton()
         
         // Act
-        buttonKit.logout()
+        buttonKit.onLogoutComplete(FilteredMParticleUser(), request: FilteredMPIdentityApiRequest())
         
         // Assert
         XCTAssertTrue(Actual.didCallClearAllData)
