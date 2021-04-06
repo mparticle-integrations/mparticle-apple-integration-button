@@ -19,13 +19,13 @@ jobs:
           ${{ runner.os }}-carthage-
 
     - name: Carthage
-      run: carthage update
+      run: ./carthage.sh update
     
     - name: Test
       run: |
         xcodebuild \
           -project mParticle-Button.xcodeproj \
           -scheme mParticle-Button \
-          -destination "platform=iOS Simulator,name=iPhone 11,OS=latest" \
+          -destination "platform=iOS Simulator,name=iPhone 12,OS=latest" \
           clean test
   
