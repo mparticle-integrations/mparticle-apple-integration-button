@@ -4,7 +4,6 @@ import mParticle_Button
 
 class Actual {
     static var applicationId: String?
-    static var didCallClearAllData = false
     static var activity: TestActivity!
 }
 
@@ -19,9 +18,6 @@ extension ButtonMerchant {
     }
     @objc public static func handlePostInstallURL(_ completion: @escaping (URL?, Error?) -> Void) {
         completion(Stub.url, Stub.error)
-    }
-    @objc public static func clearAllData() {
-        Actual.didCallClearAllData = true
     }
     static var activity: Activity {
         return Actual.activity
@@ -95,7 +91,6 @@ class mParticle_ButtonTests: XCTestCase {
         super.setUp()
         // Reset all static test output & stubs.
         Actual.applicationId = nil
-        Actual.didCallClearAllData = false
         Actual.activity = TestActivity()
         Stub.url = nil
         Stub.error = nil
@@ -330,16 +325,5 @@ class mParticle_ButtonTests: XCTestCase {
         XCTAssertEqual(Actual.activity.actualProducts?.first?.quantity, 2)
         XCTAssertEqual(Actual.activity.actualProducts?.first?.value, 199)
         XCTAssertNotNil(Actual.activity.actualProducts?[1])
-    }
-    
-    func testLogoutClearsAllData() {
-        // Arrange
-        buttonKit = MPKitButton()
-        
-        // Act
-        buttonKit.onLogoutComplete(FilteredMParticleUser(), request: FilteredMPIdentityApiRequest())
-        
-        // Assert
-        XCTAssertTrue(Actual.didCallClearAllData)
     }
 }

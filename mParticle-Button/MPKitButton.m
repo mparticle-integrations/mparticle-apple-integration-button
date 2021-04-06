@@ -161,13 +161,6 @@ NSString * const MPKitButtonIntegrationAttribution = @"com.usebutton.source_toke
 }
 
 
-- (nonnull MPKitExecStatus *)onLogoutComplete:(nonnull FilteredMParticleUser *)user request:(nonnull FilteredMPIdentityApiRequest *)request {
-    [ButtonMerchant clearAllData];
-    return [[MPKitExecStatus alloc] initWithSDKCode:[[self class] kitCode]
-                                         returnCode:MPKitReturnCodeSuccess];
-}
-
-
 - (nonnull MPKitExecStatus *)logBaseEvent:(nonnull MPCommerceEvent *)event {
     if (![event isKindOfClass:[MPCommerceEvent class]] || !event.products) {
         return [[MPKitExecStatus alloc] initWithSDKCode:[[self class] kitCode]
