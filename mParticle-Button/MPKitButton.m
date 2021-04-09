@@ -47,6 +47,7 @@ NSString * const MPKitButtonIntegrationAttribution = @"com.usebutton.source_toke
     return ButtonMerchant.attributionToken;
 }
 
+
 @end
 
 
@@ -57,7 +58,7 @@ NSString * const MPKitButtonIntegrationAttribution = @"com.usebutton.source_toke
 @property (nonatomic, strong) MParticle *mParticleInstance;
 @property (nonatomic, strong, nonnull) MPIButton *button;
 @property (nonatomic, copy)   NSString *applicationId;
-@property (nonatomic, strong) NSURLSession *session;
+@property (nonatomic, strong) NSNotificationCenter *defaultCenter;
 
 @end
 
@@ -80,10 +81,17 @@ NSString * const MPKitButtonIntegrationAttribution = @"com.usebutton.source_toke
 
 - (MParticle *)mParticleInstance {
     if (!_mParticleInstance) {
-        return [MParticle sharedInstance];
+        _mParticleInstance = [MParticle sharedInstance];
     }
-
     return _mParticleInstance;
+}
+
+
+- (NSNotificationCenter *)defaultCenter {
+    if (!_defaultCenter) {
+        _defaultCenter = NSNotificationCenter.defaultCenter;
+    }
+    return _defaultCenter;
 }
 
 
@@ -92,11 +100,6 @@ NSString * const MPKitButtonIntegrationAttribution = @"com.usebutton.source_toke
         return;
     }
     [ButtonMerchant trackIncomingURL:url];
-    NSString *attributionToken = ButtonMerchant.attributionToken;
-    if (attributionToken) {
-        NSDictionary<NSString *, NSString *> *integrationAttributes = @{ MPKitButtonIntegrationAttribution: attributionToken };
-        [self.mParticleInstance setIntegrationAttributes:integrationAttributes forKit:[[self class] kitCode]];
-    }
 }
 
 
@@ -110,8 +113,12 @@ NSString * const MPKitButtonIntegrationAttribution = @"com.usebutton.source_toke
         execStatus = [[MPKitExecStatus alloc] initWithSDKCode:[[self class] kitCode] returnCode:MPKitReturnCodeRequirementsNotMet];
         return execStatus;
     }
-
+    
     [ButtonMerchant configureWithApplicationId:_applicationId];
+    [self.defaultCenter addObserver:self
+                           selector:@selector(observeAttributionTokenDidChangeNotification:)
+                               name:ButtonMerchant.AttributionTokenDidChangeNotification
+                             object:nil];
 
     _configuration = configuration;
     _started       = YES;
@@ -154,6 +161,37 @@ NSString * const MPKitButtonIntegrationAttribution = @"com.usebutton.source_toke
 }
 
 
+- (nonnull MPKitExecStatus *)logBaseEvent:(nonnull MPCommerceEvent *)event {
+    if (![event isKindOfClass:[MPCommerceEvent class]] || !event.products) {
+        return [[MPKitExecStatus alloc] initWithSDKCode:[[self class] kitCode]
+                                             returnCode:MPKitReturnCodeUnavailable];
+    }
+    MPKitReturnCode code = MPKitReturnCodeUnavailable;
+    
+    NSArray <ButtonProduct *> *products = [self buttonProductsFromProducts:event.products];
+    
+    switch (event.action) {
+        case MPCommerceEventActionViewDetail:
+            [ButtonMerchant.activity productViewed:products.firstObject];
+            code = MPKitReturnCodeSuccess;
+            break;
+        case MPCommerceEventActionAddToCart:
+            [ButtonMerchant.activity productAddedToCart:products.firstObject];
+            code = MPKitReturnCodeSuccess;
+            break;
+        case MPCommerceEventActionCheckout:
+            [ButtonMerchant.activity cartViewed:products];
+            code = MPKitReturnCodeSuccess;
+            break;
+        default:
+            break;
+    }
+    
+    return [[MPKitExecStatus alloc] initWithSDKCode:[[self class] kitCode]
+                                         returnCode:code];
+}
+
+
 #pragma mark - Private Methods
 
 - (NSError *)errorWithMessage:(NSString *)message {
@@ -174,6 +212,33 @@ NSString * const MPKitButtonIntegrationAttribution = @"com.usebutton.source_toke
         attributionResult.linkInfo = linkInfo;
         [self->_kitApi onAttributionCompleteWithResult:attributionResult error:nil];
     }];
+}
+
+
+- (void)observeAttributionTokenDidChangeNotification:(NSNotification *)note {
+    NSString *attributionToken = note.userInfo[ButtonMerchant.AttributionTokenKey];
+    if (attributionToken) {
+        NSDictionary<NSString *, NSString *> *integrationAttributes = @{ MPKitButtonIntegrationAttribution: attributionToken };
+        [self.mParticleInstance setIntegrationAttributes:integrationAttributes forKit:[[self class] kitCode]];
+    }
+}
+
+
+- (NSArray<ButtonProduct *> *)buttonProductsFromProducts:(NSArray <MPProduct *> *)products {
+    NSMutableArray *buttonProducts = [NSMutableArray array];
+    for (MPProduct *product in products) {
+        ButtonProduct *buttonProduct = [ButtonProduct new];
+        buttonProduct.name = product.name;
+        buttonProduct.id = product.sku;
+        buttonProduct.value = (NSInteger)(product.price.doubleValue * 100);
+        buttonProduct.quantity = product.quantity.integerValue;
+        if (product.category) {
+            buttonProduct.categories = @[product.category];
+        }
+        buttonProduct.attributes = @{@"btn_product_count" : @(products.count).stringValue};
+        [buttonProducts addObject:buttonProduct];
+    }
+    return buttonProducts;
 }
 
 @end

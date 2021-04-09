@@ -181,7 +181,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0940;
-				LastUpgradeCheck = 1010;
+				LastUpgradeCheck = 1240;
 				ORGANIZATIONNAME = mParticle;
 				TargetAttributes = {
 					DB0773D51DB916610031F3E3 = {
@@ -203,6 +203,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 			);
 			mainGroup = DB0773CC1DB916610031F3E3;
@@ -248,7 +249,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "#/usr/local/bin/carthage copy-frameworks";
+			shellScript = "#/usr/local/bin/carthage copy-frameworks\n";
 		};
 		DE81192B214C4E9F00AAC951 /* Carthage */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -264,7 +265,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "/usr/local/bin/carthage copy-frameworks";
+			shellScript = "/usr/local/bin/carthage copy-frameworks\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

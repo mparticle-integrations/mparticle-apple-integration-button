@@ -1,0 +1,31 @@
+name: Run tests
+
+on: pull_request
+
+jobs:
+  build:
+
+    runs-on:  macos-latest
+    
+    steps:
+    - name: Clone Repo
+      uses: actions/checkout@v1
+
+    - uses: actions/cache@v2
+      with:
+        path: Carthage
+        key: ${{ runner.os }}-carthage-${{ hashFiles('**/Cartfile.resolved') }}
+        restore-keys: |
+          ${{ runner.os }}-carthage-
+
+    - name: Carthage
+      run: ./carthage.sh update
+    
+    - name: Test
+      run: |
+        xcodebuild \
+          -project mParticle-Button.xcodeproj \
+          -scheme mParticle-Button \
+          -destination "platform=iOS Simulator,name=iPhone 12,OS=latest" \
+          clean test
+  

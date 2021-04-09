@@ -4,6 +4,7 @@ import mParticle_Button
 
 class Actual {
     static var applicationId: String?
+    static var activity: TestActivity!
 }
 
 class Stub {
@@ -17,6 +18,32 @@ extension ButtonMerchant {
     }
     @objc public static func handlePostInstallURL(_ completion: @escaping (URL?, Error?) -> Void) {
         completion(Stub.url, Stub.error)
+    }
+    static var activity: Activity {
+        return Actual.activity
+    }
+}
+
+class TestActivity: Activity {
+    var didCallProductViewed = false
+    var didCallProductAddedToCart = false
+    var didCallCartViewed = false
+    var actualProduct: ButtonProductCompatible?
+    var actualProducts: [ButtonProductCompatible]?
+    
+    func productViewed(_ product: ButtonProductCompatible?) {
+        didCallProductViewed = true
+        actualProduct = product
+    }
+    
+    func productAddedToCart(_ product: ButtonProductCompatible?) {
+        didCallProductAddedToCart = true
+        actualProduct = product
+    }
+    
+    func cartViewed(_ products: [ButtonProductCompatible]?) {
+        didCallCartViewed = true
+        actualProducts = products
     }
 }
 
@@ -37,6 +64,22 @@ class TestMPKitAPI: MPKitAPI {
     }
 }
 
+class TestNotificationCenter: NotificationCenter {
+    var actualObserver: MPKitButton?
+    var actualSelector: Selector?
+    var actualName: NSNotification.Name?
+    var actualObject: Any?
+    override func addObserver(_ observer: Any,
+                              selector aSelector: Selector,
+                              name aName: NSNotification.Name?,
+                              object anObject: Any?) {
+        actualObserver = observer as? MPKitButton
+        actualSelector = aSelector
+        actualName = aName
+        actualObject = anObject
+    }
+}
+
 class mParticle_ButtonTests: XCTestCase {
 
     var testMParticleInstance: TestMParticle!
@@ -48,6 +91,7 @@ class mParticle_ButtonTests: XCTestCase {
         super.setUp()
         // Reset all static test output & stubs.
         Actual.applicationId = nil
+        Actual.activity = TestActivity()
         Stub.url = nil
         Stub.error = nil
 
@@ -65,7 +109,20 @@ class mParticle_ButtonTests: XCTestCase {
     }
 
     func testDidFinishLaunchingWithConfiguration() {
+        // Arrange
+        let testNotificationCenter = TestNotificationCenter()
+        buttonKit.defaultCenter = testNotificationCenter
+        
+        // Act
+        let configuration = ["application_id": applicationId]
+        buttonKit.didFinishLaunching(withConfiguration: configuration)
+        
+        // Assert
         XCTAssertEqual(Actual.applicationId, applicationId)
+        XCTAssertEqual(testNotificationCenter.actualObserver, buttonKit)
+        XCTAssertEqual(testNotificationCenter.actualSelector, NSSelectorFromString("observeAttributionTokenDidChangeNotification:"))
+        XCTAssertEqual(testNotificationCenter.actualName, NSNotification.Name.Button.AttributionTokenDidChange)
+        XCTAssertNil(testNotificationCenter.actualObject)
     }
 
     func testOpenURLOptionsTracks() {
@@ -190,5 +247,83 @@ class mParticle_ButtonTests: XCTestCase {
         }
 
         self.wait(for: [expectation], timeout: 1.0)
+    }
+    
+    func testAttributionDidChangeNotificationSetsIntegrationAttributes() {
+        // Arrange
+        let attributionToken = "faketok-from-notification"
+        
+        // Act
+        NotificationCenter.default.post(name: Notification.Name.Button.AttributionTokenDidChange,
+                                        object: nil,
+                                        userInfo: [Notification.Key.NewToken: attributionToken])
+        // Assert
+        XCTAssertEqual(testMParticleInstance.actualIntegrationAttributes, [ "com.usebutton.source_token": attributionToken ])
+    }
+    
+    func testLogProductViewedEventInvokesButtonActivity() {
+        // Arrange
+        buttonKit = MPKitButton()
+        let product = MPProduct(name: "some name", sku: "some sku", quantity: NSNumber(integerLiteral: 2), price: NSNumber(floatLiteral: 1.99))
+        product.category = "some category"
+        let event = MPCommerceEvent(action: .viewDetail, product: product)
+        event.addProduct(MPProduct())
+        
+        // Act
+        buttonKit.logBaseEvent(event)
+        
+        // Assert
+        XCTAssertTrue(Actual.activity.didCallProductViewed)
+        XCTAssertNotNil(Actual.activity.actualProduct)
+        XCTAssertEqual(Actual.activity.actualProduct?.name, "some name")
+        XCTAssertEqual(Actual.activity.actualProduct?.id, "some sku")
+        XCTAssertEqual(Actual.activity.actualProduct?.categories, ["some category"])
+        XCTAssertEqual(Actual.activity.actualProduct?.quantity, 2)
+        XCTAssertEqual(Actual.activity.actualProduct?.value, 199)
+        XCTAssertEqual(Actual.activity.actualProduct?.attributes, ["btn_product_count" : "2"])
+    }
+    
+    func testLogProductAddedToCartEventInvokesButtonActivity() {
+        // Arrange
+        buttonKit = MPKitButton()
+        let product = MPProduct(name: "some name", sku: "some sku", quantity: NSNumber(integerLiteral: 2), price: NSNumber(floatLiteral: 1.99))
+        product.category = "some category"
+        let event = MPCommerceEvent(action: .addToCart, product: product)
+        event.addProduct(MPProduct())
+        
+        // Act
+        buttonKit.logBaseEvent(event)
+        
+        // Assert
+        XCTAssertTrue(Actual.activity.didCallProductAddedToCart)
+        XCTAssertNotNil(Actual.activity.actualProduct)
+        XCTAssertEqual(Actual.activity.actualProduct?.name, "some name")
+        XCTAssertEqual(Actual.activity.actualProduct?.id, "some sku")
+        XCTAssertEqual(Actual.activity.actualProduct?.categories, ["some category"])
+        XCTAssertEqual(Actual.activity.actualProduct?.quantity, 2)
+        XCTAssertEqual(Actual.activity.actualProduct?.value, 199)
+        XCTAssertEqual(Actual.activity.actualProduct?.attributes, ["btn_product_count" : "2"])
+    }
+    
+    func testLogCheckoutEventInvokesButtonActivity() {
+        // Arrange
+        buttonKit = MPKitButton()
+        let product = MPProduct(name: "some name", sku: "some sku", quantity: NSNumber(integerLiteral: 2), price: NSNumber(floatLiteral: 1.99))
+        product.category = "some category"
+        let event = MPCommerceEvent(action: .checkout, product: product)
+        event.addProduct(MPProduct())
+
+        // Act
+        buttonKit.logBaseEvent(event)
+
+        // Assert
+        XCTAssertTrue(Actual.activity.didCallCartViewed)
+        XCTAssertNotNil(Actual.activity.actualProducts)
+        XCTAssertEqual(Actual.activity.actualProducts?.first?.name, "some name")
+        XCTAssertEqual(Actual.activity.actualProducts?.first?.id, "some sku")
+        XCTAssertEqual(Actual.activity.actualProducts?.first?.categories, ["some category"])
+        XCTAssertEqual(Actual.activity.actualProducts?.first?.quantity, 2)
+        XCTAssertEqual(Actual.activity.actualProducts?.first?.value, 199)
+        XCTAssertNotNil(Actual.activity.actualProducts?[1])
     }
 }
