@@ -18,7 +18,11 @@
 
 #import "MPKitButton.h"
 
-@import ButtonMerchant;
+#if defined(__has_include) && __has_include(<ButtonMerchant/ButtonMerchant.h>)
+    #import <ButtonMerchant/ButtonMerchant.h>
+#else
+    #import "ButtonMerchant.h"
+#endif
 
 static NSString * const BTNMPKitVersion = @"2.0.0";
 
