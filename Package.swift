@@ -15,7 +15,7 @@ let package = Package(
                .upToNextMajor(from: "8.2.0")),
       .package(name: "ButtonMerchant",
                url: "https://github.com/button/button-merchant-ios.git",
-               .upToNextMajor(from: "1.0")),
+               .upToNextMajor(from: "1.0.0")),
     ],
     targets: [
         .target(
