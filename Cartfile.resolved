@@ -1,2 +1,2 @@
-github "button/button-merchant-ios" "1.4.2"
-github "mparticle/mparticle-apple-sdk" "8.3.0"
+github "button/button-merchant-ios" "1.4.4"
+github "mparticle/mparticle-apple-sdk" "v8.7.0"
