@@ -29,7 +29,7 @@ public let MPKitButtonErrorDomain = "com.mparticle.kits.button"
 public let MPKitButtonErrorMessageKey = "mParticle-Button Error"
 public let MPKitButtonIntegrationAttribution = "com.usebutton.source_token"
 
-@objc(MPKitButton2)
+@objc(MPKitButton)
 public class KitButton: NSObject, MPKitProtocol {
     
     public var mParticleInstance: MParticle! = MParticle.sharedInstance()
