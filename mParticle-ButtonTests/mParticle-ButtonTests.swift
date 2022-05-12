@@ -1,6 +1,7 @@
 import XCTest
 import ButtonMerchant
 import mParticle_Button
+import mParticle_Apple_SDK
 
 class Actual {
     static var applicationId: String?
@@ -65,7 +66,7 @@ class TestMPKitAPI: MPKitAPI {
 }
 
 class TestNotificationCenter: NotificationCenter {
-    var actualObserver: MPKitButton?
+    var actualObserver: KitButton?
     var actualSelector: Selector?
     var actualName: NSNotification.Name?
     var actualObject: Any?
@@ -73,7 +74,7 @@ class TestNotificationCenter: NotificationCenter {
                               selector aSelector: Selector,
                               name aName: NSNotification.Name?,
                               object anObject: Any?) {
-        actualObserver = observer as? MPKitButton
+        actualObserver = observer as? KitButton
         actualSelector = aSelector
         actualName = aName
         actualObject = anObject
@@ -83,7 +84,7 @@ class TestNotificationCenter: NotificationCenter {
 class mParticle_ButtonTests: XCTestCase {
 
     var testMParticleInstance: TestMParticle!
-    var buttonKit: MPKitButton!
+    var buttonKit: KitButton!
     var buttonInstance: MPIButton!
     var applicationId: String = "app-\(arc4random_uniform(10000))"
 
@@ -96,7 +97,7 @@ class mParticle_ButtonTests: XCTestCase {
         Stub.error = nil
 
         // Start the Button kit.
-        buttonKit = MPKitButton()
+        buttonKit = KitButton()
         testMParticleInstance = TestMParticle()
         buttonKit.mParticleInstance = testMParticleInstance
         let configuration = ["application_id": applicationId]
@@ -105,7 +106,7 @@ class mParticle_ButtonTests: XCTestCase {
     }
 
     func testKitCode() {
-        XCTAssertEqual(MPKitButton.kitCode(), 1022)
+        XCTAssertEqual(KitButton.kitCode(), 1022)
     }
 
     func testDidFinishLaunchingWithConfiguration() {
@@ -175,7 +176,7 @@ class mParticle_ButtonTests: XCTestCase {
     func testPostInstallCheckOnAttribution() {
 
         // Arrange
-        buttonKit = MPKitButton()
+        buttonKit = KitButton()
         let expectation = self.expectation(description: "post-install-url-check")
         let configuration = ["application_id": applicationId]
         let attributionToken = "testtoken-\(arc4random_uniform(10000))"
@@ -202,7 +203,7 @@ class mParticle_ButtonTests: XCTestCase {
     func testPostInstallCheckOnNoAttribution() {
 
         // Arrange
-        buttonKit = MPKitButton()
+        buttonKit = KitButton()
         let expectation = self.expectation(description: "post-install-url-check")
         let configuration = ["application_id": applicationId]
         let testKitApi = TestMPKitAPI()
@@ -227,7 +228,7 @@ class mParticle_ButtonTests: XCTestCase {
     func testPostInstallCheckOnError() {
 
         // Arrange
-        buttonKit = MPKitButton()
+        buttonKit = KitButton()
         let expectation = self.expectation(description: "post-install-url-check")
         let configuration = ["application_id": applicationId]
         let testKitApi = TestMPKitAPI()
@@ -263,7 +264,7 @@ class mParticle_ButtonTests: XCTestCase {
     
     func testLogProductViewedEventInvokesButtonActivity() {
         // Arrange
-        buttonKit = MPKitButton()
+        buttonKit = KitButton()
         let product = MPProduct(name: "some name", sku: "some sku", quantity: NSNumber(integerLiteral: 2), price: NSNumber(floatLiteral: 1.99))
         product.category = "some category"
         let event = MPCommerceEvent(action: .viewDetail, product: product)
@@ -285,7 +286,7 @@ class mParticle_ButtonTests: XCTestCase {
     
     func testLogProductAddedToCartEventInvokesButtonActivity() {
         // Arrange
-        buttonKit = MPKitButton()
+        buttonKit = KitButton()
         let product = MPProduct(name: "some name", sku: "some sku", quantity: NSNumber(integerLiteral: 2), price: NSNumber(floatLiteral: 1.99))
         product.category = "some category"
         let event = MPCommerceEvent(action: .addToCart, product: product)
@@ -307,7 +308,7 @@ class mParticle_ButtonTests: XCTestCase {
     
     func testLogCheckoutEventInvokesButtonActivity() {
         // Arrange
-        buttonKit = MPKitButton()
+        buttonKit = KitButton()
         let product = MPProduct(name: "some name", sku: "some sku", quantity: NSNumber(integerLiteral: 2), price: NSNumber(floatLiteral: 1.99))
         product.category = "some category"
         let event = MPCommerceEvent(action: .checkout, product: product)
