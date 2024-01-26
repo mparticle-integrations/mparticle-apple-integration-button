@@ -5,7 +5,7 @@ on: pull_request
 jobs:
   build:
 
-    runs-on:  macos-latest
+    runs-on: macos-12
     
     steps:
     - name: Clone Repo
@@ -19,7 +19,7 @@ jobs:
           ${{ runner.os }}-carthage-
 
     - name: Carthage
-      run: ./carthage.sh update
+      run: ./Scripts/carthage.sh update
     
     - name: Test
       run: |
