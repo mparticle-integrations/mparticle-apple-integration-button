@@ -7,12 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		DB0773DB1DB916610031F3E3 /* mParticle_Button.h in Headers */ = {isa = PBXBuildFile; fileRef = DB0773D91DB916610031F3E3 /* mParticle_Button.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		DB0773E31DB916B80031F3E3 /* MPKitButton.h in Headers */ = {isa = PBXBuildFile; fileRef = DB0773E11DB916B80031F3E3 /* MPKitButton.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		DB0773E41DB916B80031F3E3 /* MPKitButton.m in Sources */ = {isa = PBXBuildFile; fileRef = DB0773E21DB916B80031F3E3 /* MPKitButton.m */; };
+		83EE014A282CA8B4005F142B /* KitButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83EE0149282CA8B4005F142B /* KitButton.swift */; };
+		83EE014C282D4D01005F142B /* mParticle-ButtonTests-Bridging-Header.h in Headers */ = {isa = PBXBuildFile; fileRef = 83EE014B282D4D01005F142B /* mParticle-ButtonTests-Bridging-Header.h */; };
 		DE811925214C4CF900AAC951 /* mParticle_Button.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DB0773D61DB916610031F3E3 /* mParticle_Button.framework */; };
 		DE81192F214C4F5500AAC951 /* mParticle-ButtonTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE81192D214C4F5400AAC951 /* mParticle-ButtonTests.swift */; };
-		DEAA37222180E11800915875 /* MPKitButton+ButtonTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DEAA37212180E11800915875 /* MPKitButton+ButtonTests.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -26,18 +24,14 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		83EE0149282CA8B4005F142B /* KitButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KitButton.swift; sourceTree = "<group>"; };
+		83EE014B282D4D01005F142B /* mParticle-ButtonTests-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "mParticle-ButtonTests-Bridging-Header.h"; sourceTree = "<group>"; };
 		DB0773D61DB916610031F3E3 /* mParticle_Button.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = mParticle_Button.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		DB0773D91DB916610031F3E3 /* mParticle_Button.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = mParticle_Button.h; sourceTree = "<group>"; };
 		DB0773DA1DB916610031F3E3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		DB0773E11DB916B80031F3E3 /* MPKitButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPKitButton.h; sourceTree = "<group>"; };
-		DB0773E21DB916B80031F3E3 /* MPKitButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPKitButton.m; sourceTree = "<group>"; };
 		DE0F93D12149694E00E0FF7F /* mParticle-Button.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; path = "mParticle-Button.podspec"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		DE811920214C4CF900AAC951 /* mParticle-ButtonTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "mParticle-ButtonTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DE81192D214C4F5400AAC951 /* mParticle-ButtonTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "mParticle-ButtonTests.swift"; sourceTree = "<group>"; };
 		DE81192E214C4F5400AAC951 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		DEAA371F2180E11700915875 /* mParticle-ButtonTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "mParticle-ButtonTests-Bridging-Header.h"; sourceTree = "<group>"; };
-		DEAA37202180E11800915875 /* MPKitButton+ButtonTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MPKitButton+ButtonTests.h"; sourceTree = "<group>"; };
-		DEAA37212180E11800915875 /* MPKitButton+ButtonTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "MPKitButton+ButtonTests.m"; sourceTree = "<group>"; };
 		DEEEE6A3214C57BF006B5C06 /* ButtonMerchant.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ButtonMerchant.framework; path = Carthage/Build/iOS/ButtonMerchant.framework; sourceTree = "<group>"; };
 		DEEEE6A4214C57CA006B5C06 /* mParticle_Apple_SDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = mParticle_Apple_SDK.framework; path = Carthage/Build/iOS/mParticle_Apple_SDK.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -93,10 +87,8 @@
 		DB0773D81DB916610031F3E3 /* mParticle-Button */ = {
 			isa = PBXGroup;
 			children = (
-				DB0773E11DB916B80031F3E3 /* MPKitButton.h */,
-				DB0773E21DB916B80031F3E3 /* MPKitButton.m */,
-				DB0773D91DB916610031F3E3 /* mParticle_Button.h */,
 				DB0773DA1DB916610031F3E3 /* Info.plist */,
+				83EE0149282CA8B4005F142B /* KitButton.swift */,
 			);
 			path = "mParticle-Button";
 			sourceTree = "<group>";
@@ -114,9 +106,7 @@
 		DEAA37232180E11F00915875 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
-				DEAA371F2180E11700915875 /* mParticle-ButtonTests-Bridging-Header.h */,
-				DEAA37202180E11800915875 /* MPKitButton+ButtonTests.h */,
-				DEAA37212180E11800915875 /* MPKitButton+ButtonTests.m */,
+				83EE014B282D4D01005F142B /* mParticle-ButtonTests-Bridging-Header.h */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -128,8 +118,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DB0773E31DB916B80031F3E3 /* MPKitButton.h in Headers */,
-				DB0773DB1DB916610031F3E3 /* mParticle_Button.h in Headers */,
+				83EE014C282D4D01005F142B /* mParticle-ButtonTests-Bridging-Header.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -187,7 +176,7 @@
 					DB0773D51DB916610031F3E3 = {
 						CreatedOnToolsVersion = 8.0;
 						DevelopmentTeam = 39F27QYP2C;
-						LastSwiftMigration = 0940;
+						LastSwiftMigration = 1300;
 						ProvisioningStyle = Automatic;
 					};
 					DE81191F214C4CF900AAC951 = {
@@ -274,7 +263,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DB0773E41DB916B80031F3E3 /* MPKitButton.m in Sources */,
+				83EE014A282CA8B4005F142B /* KitButton.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -283,7 +272,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				DE81192F214C4F5500AAC951 /* mParticle-ButtonTests.swift in Sources */,
-				DEAA37222180E11800915875 /* MPKitButton+ButtonTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -436,7 +424,7 @@
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
 		};
@@ -463,13 +451,14 @@
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Release;
 		};
 		DE811929214C4CF900AAC951 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				CLANG_ENABLE_MODULES = YES;
@@ -500,6 +489,7 @@
 		DE81192A214C4CF900AAC951 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				CLANG_ENABLE_MODULES = YES;
